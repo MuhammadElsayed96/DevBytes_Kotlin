@@ -10,4 +10,4 @@ periodic work. In this app it's used to setup a daily background data sync.
 
 ## Screenshots
 
-![Screenshot1](screenshots/devbyte-homescreen.png)
+![Screenshot1](screenshots/starter-screen.png)
