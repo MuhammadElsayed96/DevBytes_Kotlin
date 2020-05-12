@@ -7,8 +7,13 @@ import com.example.android.devbyteviewer.database.VideoDatabase.Companion.getIns
 import com.example.android.devbyteviewer.repository.VideosRepository
 import retrofit2.HttpException
 
+
 class RefreshDataWorker(appContext: Context, params: WorkerParameters) :
 		CoroutineWorker(appContext, params) {
+
+	companion object {
+		const val WORK_NAME = "RefreshDataWorker"
+	}
 
 	override suspend fun doWork(): Result {
 		val database = getInstance(applicationContext)
