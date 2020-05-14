@@ -16,6 +16,8 @@ class RefreshDataWorker(appContext: Context, params: WorkerParameters) :
 	}
 
 	override suspend fun doWork(): Result {
+
+		// The code in here, runs in the background {coroutines}
 		val database = getInstance(applicationContext)
 		val repository = VideosRepository(database)
 

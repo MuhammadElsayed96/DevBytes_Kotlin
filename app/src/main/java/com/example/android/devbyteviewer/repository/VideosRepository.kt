@@ -12,15 +12,15 @@ import kotlinx.coroutines.withContext
 
 class VideosRepository(private val database: VideoDatabase) {
 
-    val videos: LiveData<List<Video>> = Transformations.map(database.videoDao.getVideos()) {
-        it.asDomainModel()
-    }
+	val videos: LiveData<List<Video>> = Transformations.map(database.videoDao.getVideos()) {
+		it.asDomainModel()
+	}
 
-    suspend fun refreshVideos() {
-        withContext(Dispatchers.IO) {
-            val playlist = Network.devbytes.getPlaylist().await()
-            database.videoDao.insertAll(*playlist.asDatabaseModel())
-        }
-    }
+	suspend fun refreshVideos() {
+		withContext(Dispatchers.IO) {
+			val playlist = Network.devbytes.getPlaylist().await()
+			database.videoDao.insertAll(*playlist.asDatabaseModel())
+		}
+	}
 
 }

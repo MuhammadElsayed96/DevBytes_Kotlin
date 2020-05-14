@@ -10,7 +10,7 @@ import com.bumptech.glide.Glide
  */
 @BindingAdapter("goneIfNotNull")
 fun goneIfNotNull(view: View, it: Any?) {
-    view.visibility = if (it != null) View.GONE else View.VISIBLE
+	view.visibility = if (it != null) View.GONE else View.VISIBLE
 }
 
 /**
@@ -18,5 +18,5 @@ fun goneIfNotNull(view: View, it: Any?) {
  */
 @BindingAdapter("imageUrl")
 fun setImageUrl(imageView: ImageView, url: String) {
-    Glide.with(imageView.context).load(url).into(imageView)
+	Glide.with(imageView.context).load(url).into(imageView)
 }

@@ -16,44 +16,46 @@ import java.util.concurrent.TimeUnit
  */
 class DevByteApplication : Application() {
 
-    private val coroutineContext = Dispatchers.Default
-    private val applicationCoroutineScope = CoroutineScope(coroutineContext)
+	private val coroutineContext = Dispatchers.Default
+	private val applicationCoroutineScope = CoroutineScope(coroutineContext)
 
-    /**
-     * onCreate is called before the first screen is shown to the user.
-     *
-     * Use it to setup any background tasks, running expensive setup operations in a background
-     * thread to avoid delaying app start.
-     */
-    override fun onCreate() {
-        super.onCreate()
-        Timber.plant(Timber.DebugTree())
-        delayInit()
-    }
+	/**
+	 * onCreate is called before the first screen is shown to the user.
+	 *
+	 * Use it to setup any background tasks, running expensive setup operations in a background
+	 * thread to avoid delaying app start.
+	 */
+	override fun onCreate() {
+		super.onCreate()
+		Timber.plant(Timber.DebugTree())
+		delayInit()
+	}
 
-    private fun delayInit() {
+	private fun delayInit() {
 
-        val constraints = Constraints.Builder()
-                .setRequiredNetworkType(NetworkType.UNMETERED)
-                .setRequiresBatteryNotLow(true)
-                .setRequiresCharging(true)
-                .apply {
-                    if (SDK_INT >= M)
-                        setRequiresDeviceIdle(true)
-                }
-                .build()
+		val constraints = Constraints.Builder()
+				.setRequiredNetworkType(NetworkType.UNMETERED)
+				.setRequiresBatteryNotLow(true)
+				.setRequiresCharging(true)
+				.apply {
+					if (SDK_INT >= M)
+						setRequiresDeviceIdle(true)
+				}
+				.build()
 
-        applicationCoroutineScope.launch {
-            val workRepeatingRequest = PeriodicWorkRequestBuilder<RefreshDataWorker>(
-                    1, TimeUnit.DAYS)
-                    .setConstraints(constraints)
-                    .build()
+		applicationCoroutineScope.launch {
+			val workRepeatingRequest = PeriodicWorkRequestBuilder<RefreshDataWorker>(
+					1, TimeUnit.DAYS)
+					.setConstraints(constraints)
+					.build()
 
-            WorkManager.getInstance().enqueueUniquePeriodicWork(
-                    RefreshDataWorker.WORK_NAME,
-                    ExistingPeriodicWorkPolicy.KEEP,
-                    workRepeatingRequest
-            )
-        }
-    }
+			// soon after the request is enqueued, it will start running, it will do the work.
+			WorkManager.getInstance().enqueueUniquePeriodicWork(
+					RefreshDataWorker.WORK_NAME,
+					ExistingPeriodicWorkPolicy.KEEP,
+					workRepeatingRequest
+			)
+		}
+
+	}
 }

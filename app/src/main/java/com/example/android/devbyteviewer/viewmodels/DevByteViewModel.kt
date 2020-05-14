@@ -23,51 +23,51 @@ import kotlinx.coroutines.launch
  */
 class DevByteViewModel(application: Application) : AndroidViewModel(application) {
 
-    /**
-     * This is the job for all coroutines started by this ViewModel.
-     *
-     * Cancelling this job will cancel all coroutines started by this ViewModel.
-     */
-    private val viewModelJob = SupervisorJob()
+	/**
+	 * This is the job for all coroutines started by this ViewModel.
+	 *
+	 * Cancelling this job will cancel all coroutines started by this ViewModel.
+	 */
+	private val viewModelJob = SupervisorJob()
 
-    /**
-     * This is the main scope for all coroutines launched by MainViewModel.
-     *
-     * Since we pass viewModelJob, you can cancel all coroutines launched by uiScope by calling
-     * viewModelJob.cancel()
-     */
-    private val viewModelScope = CoroutineScope(viewModelJob + Dispatchers.Main)
+	/**
+	 * This is the main scope for all coroutines launched by MainViewModel.
+	 *
+	 * Since we pass viewModelJob, you can cancel all coroutines launched by uiScope by calling
+	 * viewModelJob.cancel()
+	 */
+	private val viewModelScope = CoroutineScope(viewModelJob + Dispatchers.Main)
 
-    private val database = getInstance(application)
+	private val database = getInstance(application)
 
-    private val videosRepository = VideosRepository(database)
+	private val videosRepository = VideosRepository(database)
 
-    init {
-        viewModelScope.launch {
-            videosRepository.refreshVideos()
-        }
-    }
+	init {
+		viewModelScope.launch {
+			videosRepository.refreshVideos()
+		}
+	}
 
-    val playlist = videosRepository.videos
+	val playlist = videosRepository.videos
 
-    /**
-     * Cancel all coroutines when the ViewModel is cleared
-     */
-    override fun onCleared() {
-        super.onCleared()
-        viewModelJob.cancel()
-    }
+	/**
+	 * Cancel all coroutines when the ViewModel is cleared
+	 */
+	override fun onCleared() {
+		super.onCleared()
+		viewModelJob.cancel()
+	}
 
-    /**
-     * Factory for constructing DevByteViewModel with parameter
-     */
-    class Factory(val app: Application) : ViewModelProvider.Factory {
-        override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-            if (modelClass.isAssignableFrom(DevByteViewModel::class.java)) {
-                @Suppress("UNCHECKED_CAST")
-                return DevByteViewModel(app) as T
-            }
-            throw IllegalArgumentException("Unable to construct viewmodel")
-        }
-    }
+	/**
+	 * Factory for constructing DevByteViewModel with parameter
+	 */
+	class Factory(val app: Application) : ViewModelProvider.Factory {
+		override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+			if (modelClass.isAssignableFrom(DevByteViewModel::class.java)) {
+				@Suppress("UNCHECKED_CAST")
+				return DevByteViewModel(app) as T
+			}
+			throw IllegalArgumentException("Unable to construct viewmodel")
+		}
+	}
 }
